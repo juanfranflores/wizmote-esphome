@@ -9,6 +9,13 @@
 #include <queue>
 #include <vector>
 
+#if defined(USE_ESP32)
+#include <esp_now.h>
+#elif defined(USE_ESP8266)
+#include <ESP8266WiFi.h>
+#include <espnow.h>
+#endif
+
 namespace esphome {
 namespace esp_now {
 
@@ -44,7 +51,7 @@ class ESPNowComponent : public Component {
 #ifdef USE_ESP8266
   static void on_data_received(uint8_t *bssid, uint8_t *data, uint8_t len);
 #elif defined(USE_ESP32)
-  static void on_data_received(const uint8_t *bssid, const uint8_t *data, int len);
+  static void on_data_received(const esp_now_recv_info *info, const uint8_t *data, int len);
 #endif
 
   Trigger<ESPNowPacket> *get_on_packet_trigger() { return this->on_packet_; }
